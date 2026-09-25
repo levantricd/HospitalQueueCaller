@@ -16,8 +16,7 @@ namespace HospitalQueueCaller
 
         public void ShowRange(int start, int end)
         {
-            txtDisplayRange.Text =
-                $"XIN MỜI SỐ THỨ TỰ TỪ {start:D3} ĐẾN {end:D3}";
+            // Chưa cập nhật dòng phạm vi ở đây
         }
     }
 }
