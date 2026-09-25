@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Forms;
+using Forms = System.Windows.Forms;
 
 namespace HospitalQueueCaller
 {
@@ -18,7 +18,7 @@ namespace HospitalQueueCaller
             InitializeComponent();
             displayWindow = new DisplayWindow();
 
-            var screens = Screen.AllScreens;
+            var screens = Forms.Screen.AllScreens;
 
             displayWindow.Left = screens[0].WorkingArea.Left;
             displayWindow.Top = screens[0].WorkingArea.Top;
@@ -82,6 +82,7 @@ namespace HospitalQueueCaller
         private void UpdateDisplay()
         {
             txtCurrentNumber.Text = currentNumber.ToString("D3");
+            displayWindow.ShowNumber(currentNumber);
         }
 
         private string SaveFile =>
