@@ -23,7 +23,6 @@ namespace HospitalQueueCaller
             txtDisplayEnd.Text =
                 end.ToString("D3");
 
-
             if (mode == "SỐ ƯU TIÊN")
             {
                 txtDisplayMode.Foreground =
