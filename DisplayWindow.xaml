@@ -7,32 +7,44 @@
         ShowInTaskbar="False">
 
     <Grid>
+
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
 
-            <TextBlock x:Name="txtDisplayRange"
-                       Text="XIN MỜI SỐ THỨ TỰ TỪ 001 ĐẾN 010"
+            <!-- Dòng thông báo -->
+            <TextBlock Text="XIN MỜI SỐ THỨ TỰ TỪ"
                        Foreground="White"
-                       FontSize="45"
+                       FontSize="55"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
-                       Margin="0,0,0,40"/>
+                       Margin="0,0,0,20"/>
 
-            <TextBlock x:Name="txtDisplayNumber"
-                       Text="000"
+            <!-- Số bắt đầu -->
+            <TextBlock x:Name="txtDisplayStart"
+                       Text="001"
                        Foreground="White"
-                       FontSize="250"
+                       FontSize="180"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
 
-            <TextBlock x:Name="txtDisplayInfo"
-                       Text="Vui lòng chờ đến lượt"
+            <!-- Chữ ĐẾN -->
+            <TextBlock Text="ĐẾN"
                        Foreground="White"
-                       FontSize="35"
+                       FontSize="50"
+                       FontWeight="Bold"
                        HorizontalAlignment="Center"
-                       Margin="0,40,0,0"/>
+                       Margin="0,10,0,10"/>
+
+            <!-- Số kết thúc -->
+            <TextBlock x:Name="txtDisplayEnd"
+                       Text="010"
+                       Foreground="White"
+                       FontSize="180"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
 
         </StackPanel>
+
     </Grid>
 
 </Window>

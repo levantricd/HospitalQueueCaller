@@ -20,7 +20,9 @@ namespace HospitalQueueCaller
 
             displayWindow = new DisplayWindow();
 
-            displayWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            displayWindow.WindowStartupLocation =
+                WindowStartupLocation.CenterScreen;
+
             displayWindow.Show();
 
             LoadState();
@@ -28,6 +30,7 @@ namespace HospitalQueueCaller
             btnStart.Click += BtnStart_Click;
             btnNext.Click += BtnNext_Click;
             btnReset.Click += BtnReset_Click;
+
             this.Closing += MainWindow_Closing;
         }
 
@@ -39,7 +42,7 @@ namespace HospitalQueueCaller
                 step <= 0 ||
                 startNumber > endNumber)
             {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     "Vui lòng nhập thông tin hợp lệ.");
 
                 return;
@@ -48,7 +51,12 @@ namespace HospitalQueueCaller
             currentNumber = startNumber;
 
             SaveState();
+
             UpdateDisplay();
+
+            displayWindow.ShowRange(
+                startNumber,
+                endNumber);
 
             txtStatus.Text =
                 $"Trạng thái: Đang chạy từ {startNumber:D3} " +
@@ -59,34 +67,24 @@ namespace HospitalQueueCaller
         {
             if (currentNumber == 0)
             {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     "Vui lòng bấm BẮT ĐẦU DÃY trước.");
 
                 return;
             }
 
-            int nextNumber;
-
-            if (currentNumber == startNumber)
+            if (currentNumber > endNumber)
             {
-                nextNumber = currentNumber;
-            }
-            else
-            {
-                nextNumber = currentNumber + step;
-            }
-
-            if (nextNumber > endNumber)
-            {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     "Đã hết số trong dãy.");
 
                 return;
             }
 
-            currentNumber = nextNumber;
-
             UpdateDisplay();
+
+            currentNumber += step;
+
             SaveState();
         }
 
@@ -97,9 +95,11 @@ namespace HospitalQueueCaller
             SaveState();
 
             txtCurrentNumber.Text = "000";
+
             displayWindow.ShowNumber(0);
 
-            txtStatus.Text = "Trạng thái: Đã reset";
+            txtStatus.Text =
+                "Trạng thái: Đã reset";
         }
 
         private void UpdateDisplay()
@@ -107,7 +107,8 @@ namespace HospitalQueueCaller
             txtCurrentNumber.Text =
                 currentNumber.ToString("D3");
 
-            displayWindow.ShowNumber(currentNumber);
+            displayWindow.ShowNumber(
+                currentNumber);
         }
 
         private string SaveFile =>
@@ -167,7 +168,15 @@ namespace HospitalQueueCaller
                 txtCurrentNumber.Text =
                     currentNumber.ToString("D3");
 
-                displayWindow.ShowNumber(currentNumber);
+                displayWindow.ShowNumber(
+                    currentNumber);
+
+                if (startNumber > 0 && endNumber > 0)
+                {
+                    displayWindow.ShowRange(
+                        startNumber,
+                        endNumber);
+                }
             }
             catch
             {
@@ -182,7 +191,10 @@ namespace HospitalQueueCaller
             public int step { get; set; }
             public int currentNumber { get; set; }
         }
-        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+
+        private void MainWindow_Closing(
+            object? sender,
+            System.ComponentModel.CancelEventArgs e)
         {
             if (displayWindow != null)
             {
@@ -191,12 +203,5 @@ namespace HospitalQueueCaller
 
             Application.Current.Shutdown();
         }
-
-        public void ShowRange(int start, int end)
-        {
-            txtDisplayRange.Text =
-                $"XIN MỜI SỐ THỨ TỰ TỪ {start:D3} ĐẾN {end:D3}";
-        }
-
     }
 }

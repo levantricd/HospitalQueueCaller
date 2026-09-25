@@ -11,12 +11,13 @@ namespace HospitalQueueCaller
 
         public void ShowNumber(int number)
         {
-            txtDisplayNumber.Text = number.ToString("D3");
+            // Hiện tại chưa dùng ở phần bố cục này
         }
 
         public void ShowRange(int start, int end)
         {
-            // Chưa cập nhật dòng phạm vi ở đây
+            txtDisplayStart.Text = start.ToString("D3");
+            txtDisplayEnd.Text = end.ToString("D3");
         }
     }
 }
