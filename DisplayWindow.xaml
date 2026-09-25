@@ -10,11 +10,13 @@
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
 
-            <TextBlock Text="SỐ THỨ TỰ"
+            <TextBlock x:Name="txtDisplayRange"
+                       Text="XIN MỜI SỐ THỨ TỰ TỪ 001 ĐẾN 010"
                        Foreground="White"
-                       FontSize="50"
+                       FontSize="45"
                        FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,40"/>
 
             <TextBlock x:Name="txtDisplayNumber"
                        Text="000"
@@ -27,7 +29,8 @@
                        Text="Vui lòng chờ đến lượt"
                        Foreground="White"
                        FontSize="35"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center"
+                       Margin="0,40,0,0"/>
 
         </StackPanel>
     </Grid>

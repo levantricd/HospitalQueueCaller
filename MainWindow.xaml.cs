@@ -20,10 +20,7 @@ namespace HospitalQueueCaller
 
             displayWindow = new DisplayWindow();
 
-            var screens = System.Windows.Forms.Screen.AllScreens;
-
-            displayWindow.Left = screens[0].WorkingArea.Left;
-            displayWindow.Top = screens[0].WorkingArea.Top;
+            displayWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             displayWindow.Show();
 
             LoadState();
@@ -31,6 +28,7 @@ namespace HospitalQueueCaller
             btnStart.Click += BtnStart_Click;
             btnNext.Click += BtnNext_Click;
             btnReset.Click += BtnReset_Click;
+            this.Closing += MainWindow_Closing;
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -184,5 +182,21 @@ namespace HospitalQueueCaller
             public int step { get; set; }
             public int currentNumber { get; set; }
         }
+        private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (displayWindow != null)
+            {
+                displayWindow.Close();
+            }
+
+            Application.Current.Shutdown();
+        }
+
+        public void ShowRange(int start, int end)
+        {
+            txtDisplayRange.Text =
+                $"XIN MỜI SỐ THỨ TỰ TỪ {start:D3} ĐẾN {end:D3}";
+        }
+
     }
 }
