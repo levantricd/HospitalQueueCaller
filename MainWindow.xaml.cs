@@ -7,109 +7,10 @@ namespace HospitalQueueCaller
 {
     public partial class MainWindow : Window
     {
-        private int startNumber;
-        private int endNumber;
-        private int step;
-        private int currentNumber;
-
         private DisplayWindow displayWindow;
+        private DisplayWindow displayWindow2;
 
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            displayWindow = new DisplayWindow();
-
-            displayWindow.WindowStartupLocation =
-                WindowStartupLocation.CenterScreen;
-
-            displayWindow.Show();
-
-            LoadState();
-
-            btnStart.Click += BtnStart_Click;
-            btnNext.Click += BtnNext_Click;
-            btnReset.Click += BtnReset_Click;
-
-            this.Closing += MainWindow_Closing;
-        }
-
-        private void BtnStart_Click(object sender, RoutedEventArgs e)
-        {
-            if (!int.TryParse(txtStartNumber.Text, out startNumber) ||
-                !int.TryParse(txtEndNumber.Text, out endNumber) ||
-                !int.TryParse(txtStep.Text, out step) ||
-                step <= 0 ||
-                startNumber > endNumber)
-            {
-                MessageBox.Show(
-                    "Vui lòng nhập thông tin hợp lệ.");
-
-                return;
-            }
-
-            currentNumber = startNumber;
-
-            SaveState();
-
-            UpdateDisplay();
-
-            displayWindow.ShowRange(
-                startNumber,
-                endNumber);
-
-            txtStatus.Text =
-                $"Trạng thái: Đang chạy từ {startNumber:D3} " +
-                $"đến {endNumber:D3}, bước {step}";
-        }
-
-        private void BtnNext_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentNumber == 0)
-            {
-                MessageBox.Show(
-                    "Vui lòng bấm BẮT ĐẦU DÃY trước.");
-
-                return;
-            }
-
-            if (currentNumber > endNumber)
-            {
-                MessageBox.Show(
-                    "Đã hết số trong dãy.");
-
-                return;
-            }
-
-            UpdateDisplay();
-
-            currentNumber += step;
-
-            SaveState();
-        }
-
-        private void BtnReset_Click(object sender, RoutedEventArgs e)
-        {
-            currentNumber = 0;
-
-            SaveState();
-
-            txtCurrentNumber.Text = "000";
-
-            displayWindow.ShowNumber(0);
-
-            txtStatus.Text =
-                "Trạng thái: Đã reset";
-        }
-
-        private void UpdateDisplay()
-        {
-            txtCurrentNumber.Text =
-                currentNumber.ToString("D3");
-
-            displayWindow.ShowNumber(
-                currentNumber);
-        }
+        private QueueState state = new QueueState();
 
         private string SaveFile =>
             Path.Combine(
@@ -118,90 +19,501 @@ namespace HospitalQueueCaller
                 "HospitalQueueCaller",
                 "queue.json");
 
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            displayWindow = new DisplayWindow();
+            displayWindow2 = new DisplayWindow();
+
+            displayWindow.WindowStartupLocation =
+                WindowStartupLocation.CenterScreen;
+
+            displayWindow2.WindowStartupLocation =
+                WindowStartupLocation.CenterScreen;
+
+            displayWindow.Show();
+            displayWindow2.Show();
+
+            LoadState();
+
+            btnStartNormal.Click += BtnStartNormal_Click;
+            btnNextNormal.Click += BtnNextNormal_Click;
+            btnResetNormal.Click += BtnResetNormal_Click;
+
+            btnStartPriority.Click += BtnStartPriority_Click;
+            btnNextPriority.Click += BtnNextPriority_Click;
+            btnResetPriority.Click += BtnResetPriority_Click;
+
+            Closing += MainWindow_Closing;
+
+            UpdateUI();
+        }
+
+        // =========================================================
+        // SỐ THƯỜNG
+        // =========================================================
+
+        private void BtnStartNormal_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (!ReadNormalConfig())
+                return;
+
+            state.NormalLastStart =
+                state.NormalStart;
+
+            state.NormalLastEnd =
+                state.NormalStart +
+                state.NormalStep -
+                1;
+
+            state.ActiveMode = "SỐ THƯỜNG";
+
+            SaveState();
+            UpdateUI();
+            UpdateDisplays();
+
+            txtStatus.Text =
+                $"Đã bắt đầu số thường: " +
+                $"{state.NormalLastStart:D3} - " +
+                $"{state.NormalLastEnd:D3}";
+        }
+
+        private void BtnNextNormal_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (!ReadNormalConfig())
+                return;
+
+            if (state.NormalLastStart <= 0)
+            {
+                BtnStartNormal_Click(sender, e);
+                return;
+            }
+
+            int nextStart =
+                state.NormalLastEnd + 1;
+
+            state.NormalLastStart =
+                nextStart;
+
+            state.NormalLastEnd =
+                nextStart +
+                state.NormalStep -
+                1;
+
+            state.ActiveMode = "SỐ THƯỜNG";
+
+            SaveState();
+            UpdateUI();
+            UpdateDisplays();
+
+            txtStatus.Text =
+                $"Đã gọi số thường: " +
+                $"{state.NormalLastStart:D3} - " +
+                $"{state.NormalLastEnd:D3}";
+        }
+
+        private void BtnResetNormal_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            state.NormalLastStart = 0;
+            state.NormalLastEnd = 0;
+
+            SaveState();
+            UpdateUI();
+
+            txtStatus.Text =
+                "Đã reset số thường.";
+        }
+
+
+        // =========================================================
+        // SỐ ƯU TIÊN
+        // =========================================================
+
+        private void BtnStartPriority_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (!ReadPriorityConfig())
+                return;
+
+            state.PriorityLastStart =
+                state.PriorityStart;
+
+            state.PriorityLastEnd =
+                state.PriorityStart +
+                state.PriorityStep -
+                1;
+
+            state.ActiveMode = "SỐ ƯU TIÊN";
+
+            SaveState();
+            UpdateUI();
+            UpdateDisplays();
+
+            txtStatus.Text =
+                $"Đã bắt đầu số ưu tiên: " +
+                $"{state.PriorityLastStart:D3} - " +
+                $"{state.PriorityLastEnd:D3}";
+        }
+
+        private void BtnNextPriority_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (!ReadPriorityConfig())
+                return;
+
+            if (state.PriorityLastStart <= 0)
+            {
+                BtnStartPriority_Click(sender, e);
+                return;
+            }
+
+            int nextStart =
+                state.PriorityLastEnd + 1;
+
+            state.PriorityLastStart =
+                nextStart;
+
+            state.PriorityLastEnd =
+                nextStart +
+                state.PriorityStep -
+                1;
+
+            state.ActiveMode = "SỐ ƯU TIÊN";
+
+            SaveState();
+            UpdateUI();
+            UpdateDisplays();
+
+            txtStatus.Text =
+                $"Đã gọi số ưu tiên: " +
+                $"{state.PriorityLastStart:D3} - " +
+                $"{state.PriorityLastEnd:D3}";
+        }
+
+        private void BtnResetPriority_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            state.PriorityLastStart = 0;
+            state.PriorityLastEnd = 0;
+
+            SaveState();
+            UpdateUI();
+
+            txtStatus.Text =
+                "Đã reset số ưu tiên.";
+        }
+
+
+        // =========================================================
+        // ĐỌC CẤU HÌNH
+        // =========================================================
+
+        private bool ReadNormalConfig()
+        {
+            if (!int.TryParse(
+                    txtNormalStart.Text,
+                    out int start) ||
+                !int.TryParse(
+                    txtNormalStep.Text,
+                    out int step) ||
+                start <= 0 ||
+                step <= 0)
+            {
+                MessageBox.Show(
+                    "Số bắt đầu và bước tăng của số thường không hợp lệ.");
+
+                return false;
+            }
+
+            state.NormalStart = start;
+            state.NormalStep = step;
+
+            return true;
+        }
+
+        private bool ReadPriorityConfig()
+        {
+            if (!int.TryParse(
+                    txtPriorityStart.Text,
+                    out int start) ||
+                !int.TryParse(
+                    txtPriorityStep.Text,
+                    out int step) ||
+                start <= 0 ||
+                step <= 0)
+            {
+                MessageBox.Show(
+                    "Số bắt đầu và bước tăng của số ưu tiên không hợp lệ.");
+
+                return false;
+            }
+
+            state.PriorityStart = start;
+            state.PriorityStep = step;
+
+            return true;
+        }
+
+
+        // =========================================================
+        // CẬP NHẬT GIAO DIỆN
+        // =========================================================
+
+        private void UpdateUI()
+        {
+            txtNormalStart.Text =
+                state.NormalStart.ToString();
+
+            txtNormalStep.Text =
+                state.NormalStep.ToString();
+
+            txtPriorityStart.Text =
+                state.PriorityStart.ToString();
+
+            txtPriorityStep.Text =
+                state.PriorityStep.ToString();
+
+
+            if (state.NormalLastStart > 0)
+            {
+                txtNormalRange.Text =
+                    $"{state.NormalLastStart:D3} - " +
+                    $"{state.NormalLastEnd:D3}";
+            }
+            else
+            {
+                txtNormalRange.Text = "---";
+            }
+
+
+            if (state.PriorityLastStart > 0)
+            {
+                txtPriorityRange.Text =
+                    $"{state.PriorityLastStart:D3} - " +
+                    $"{state.PriorityLastEnd:D3}";
+            }
+            else
+            {
+                txtPriorityRange.Text = "---";
+            }
+
+
+            if (!string.IsNullOrWhiteSpace(
+                    state.ActiveMode))
+            {
+                txtActiveMode.Text =
+                    $"ĐANG GỌI: {state.ActiveMode}";
+
+                if (state.ActiveMode ==
+                    "SỐ ƯU TIÊN")
+                {
+                    txtActiveMode.Foreground =
+                        new System.Windows.Media.SolidColorBrush(
+                            System.Windows.Media.Colors.DarkRed);
+                }
+                else
+                {
+                    txtActiveMode.Foreground =
+                        new System.Windows.Media.SolidColorBrush(
+                            System.Windows.Media.Colors.DarkBlue);
+                }
+            }
+            else
+            {
+                txtActiveMode.Text =
+                    "CHƯA GỌI SỐ";
+            }
+        }
+
+
+        // =========================================================
+        // CẬP NHẬT 2 MÀN HÌNH
+        // =========================================================
+
+        private void UpdateDisplays()
+        {
+            int start;
+            int end;
+            string mode;
+
+            if (state.ActiveMode ==
+                "SỐ ƯU TIÊN")
+            {
+                start =
+                    state.PriorityLastStart;
+
+                end =
+                    state.PriorityLastEnd;
+
+                mode =
+                    "SỐ ƯU TIÊN";
+            }
+            else
+            {
+                start =
+                    state.NormalLastStart;
+
+                end =
+                    state.NormalLastEnd;
+
+                mode =
+                    "SỐ THƯỜNG";
+            }
+
+            if (start <= 0)
+                return;
+
+            displayWindow.ShowRange(
+                start,
+                end,
+                mode);
+
+            displayWindow2.ShowRange(
+                start,
+                end,
+                mode);
+        }
+
+
+        // =========================================================
+        // LƯU TRẠNG THÁI
+        // =========================================================
+
         private void SaveState()
         {
-            Directory.CreateDirectory(
-                Path.GetDirectoryName(SaveFile)!);
-
-            var state = new QueueState
+            try
             {
-                startNumber = startNumber,
-                endNumber = endNumber,
-                step = step,
-                currentNumber = currentNumber
-            };
+                Directory.CreateDirectory(
+                    Path.GetDirectoryName(
+                        SaveFile)!);
 
-            File.WriteAllText(
-                SaveFile,
-                JsonSerializer.Serialize(state));
+                string json =
+                    JsonSerializer.Serialize(
+                        state,
+                        new JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        });
+
+                File.WriteAllText(
+                    SaveFile,
+                    json);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Không thể lưu trạng thái:\n" +
+                    ex.Message);
+            }
         }
+
+
+        // =========================================================
+        // ĐỌC TRẠNG THÁI
+        // =========================================================
 
         private void LoadState()
         {
             if (!File.Exists(SaveFile))
+            {
+                state = new QueueState
+                {
+                    NormalStart = 1,
+                    NormalStep = 10,
+
+                    PriorityStart = 1,
+                    PriorityStep = 5,
+
+                    NormalLastStart = 0,
+                    NormalLastEnd = 0,
+
+                    PriorityLastStart = 0,
+                    PriorityLastEnd = 0,
+
+                    ActiveMode = ""
+                };
+
                 return;
+            }
 
             try
             {
-                var json = File.ReadAllText(SaveFile);
+                string json =
+                    File.ReadAllText(
+                        SaveFile);
 
-                var state =
-                    JsonSerializer.Deserialize<QueueState>(json);
+                var loaded =
+                    JsonSerializer.Deserialize<QueueState>(
+                        json);
 
-                if (state == null)
-                    return;
-
-                startNumber = state.startNumber;
-                endNumber = state.endNumber;
-                step = state.step;
-                currentNumber = state.currentNumber;
-
-                txtStartNumber.Text =
-                    startNumber.ToString("D3");
-
-                txtEndNumber.Text =
-                    endNumber.ToString("D3");
-
-                txtStep.Text =
-                    step.ToString();
-
-                txtCurrentNumber.Text =
-                    currentNumber.ToString("D3");
-
-                displayWindow.ShowNumber(
-                    currentNumber);
-
-                if (startNumber > 0 && endNumber > 0)
+                if (loaded != null)
                 {
-                    displayWindow.ShowRange(
-                        startNumber,
-                        endNumber);
+                    state = loaded;
                 }
             }
             catch
             {
-                currentNumber = 0;
+                state = new QueueState
+                {
+                    NormalStart = 1,
+                    NormalStep = 10,
+
+                    PriorityStart = 1,
+                    PriorityStep = 5
+                };
             }
         }
 
-        private class QueueState
-        {
-            public int startNumber { get; set; }
-            public int endNumber { get; set; }
-            public int step { get; set; }
-            public int currentNumber { get; set; }
-        }
+
+        // =========================================================
+        // ĐÓNG ỨNG DỤNG
+        // =========================================================
 
         private void MainWindow_Closing(
             object? sender,
             System.ComponentModel.CancelEventArgs e)
         {
+            SaveState();
+
             if (displayWindow != null)
-            {
                 displayWindow.Close();
-            }
+
+            if (displayWindow2 != null)
+                displayWindow2.Close();
 
             Application.Current.Shutdown();
+        }
+
+
+        // =========================================================
+        // CLASS LƯU TRẠNG THÁI
+        // =========================================================
+
+        private class QueueState
+        {
+            public int NormalStart { get; set; } = 1;
+            public int NormalStep { get; set; } = 10;
+
+            public int NormalLastStart { get; set; }
+            public int NormalLastEnd { get; set; }
+
+            public int PriorityStart { get; set; } = 1;
+            public int PriorityStep { get; set; } = 5;
+
+            public int PriorityLastStart { get; set; }
+            public int PriorityLastEnd { get; set; }
+
+            public string ActiveMode { get; set; } = "";
         }
     }
 }

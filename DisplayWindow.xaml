@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None"
         WindowState="Maximized"
-        Background="Black"
+        Background="#FFFDF7"
         ShowInTaskbar="False">
 
     <Grid>
@@ -11,35 +11,47 @@
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
 
-            <!-- Dòng thông báo -->
-            <TextBlock Text="XIN MỜI SỐ THỨ TỰ TỪ"
-                       Foreground="White"
-                       FontSize="55"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,20"/>
-
-            <!-- Số bắt đầu -->
-            <TextBlock x:Name="txtDisplayStart"
-                       Text="001"
-                       Foreground="White"
-                       FontSize="180"
+            <!-- TIÊU ĐỀ -->
+            <TextBlock Text="XIN MỜI SỐ THỨ TỰ"
+                       Foreground="#111111"
+                       FontSize="60"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
 
-            <!-- Chữ ĐẾN -->
-            <TextBlock Text="ĐẾN"
-                       Foreground="White"
+
+            <!-- LOẠI SỐ -->
+            <TextBlock x:Name="txtDisplayMode"
+                       Text="SỐ THƯỜNG"
+                       Foreground="#174A7E"
                        FontSize="50"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
-                       Margin="0,10,0,10"/>
+                       Margin="0,10,0,20"/>
 
-            <!-- Số kết thúc -->
+
+            <!-- SỐ BẮT ĐẦU -->
+            <TextBlock x:Name="txtDisplayStart"
+                       Text="001"
+                       Foreground="#000000"
+                       FontSize="200"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+
+            <!-- ĐẾN -->
+            <TextBlock Text="ĐẾN"
+                       Foreground="#444444"
+                       FontSize="55"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,5,0,5"/>
+
+
+            <!-- SỐ KẾT THÚC -->
             <TextBlock x:Name="txtDisplayEnd"
                        Text="010"
-                       Foreground="White"
-                       FontSize="180"
+                       Foreground="#000000"
+                       FontSize="200"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
 

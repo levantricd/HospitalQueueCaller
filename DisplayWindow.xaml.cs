@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace HospitalQueueCaller
 {
@@ -9,15 +10,32 @@ namespace HospitalQueueCaller
             InitializeComponent();
         }
 
-        public void ShowNumber(int number)
+        public void ShowRange(
+            int start,
+            int end,
+            string mode)
         {
-            // Hiện tại chưa dùng ở phần bố cục này
-        }
+            txtDisplayMode.Text = mode;
 
-        public void ShowRange(int start, int end)
-        {
-            txtDisplayStart.Text = start.ToString("D3");
-            txtDisplayEnd.Text = end.ToString("D3");
+            txtDisplayStart.Text =
+                start.ToString("D3");
+
+            txtDisplayEnd.Text =
+                end.ToString("D3");
+
+
+            if (mode == "SỐ ƯU TIÊN")
+            {
+                txtDisplayMode.Foreground =
+                    new SolidColorBrush(
+                        Colors.DarkRed);
+            }
+            else
+            {
+                txtDisplayMode.Foreground =
+                    new SolidColorBrush(
+                        Colors.DarkBlue);
+            }
         }
     }
 }
