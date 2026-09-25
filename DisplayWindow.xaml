@@ -6,12 +6,13 @@
         Background="#FFFDF7"
         ShowInTaskbar="False">
 
-    <Grid Margin="20">
+    <Grid Margin="30">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
 
         <!-- TIÊU ĐỀ -->
         <StackPanel Grid.Row="0"
@@ -20,35 +21,35 @@
 
             <TextBlock Text="XIN MỜI SỐ THỨ TỰ"
                        Foreground="#111111"
-                       FontSize="72"
+                       FontSize="68"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"/>
 
             <TextBlock x:Name="txtDisplayMode"
                        Text="SỐ THƯỜNG"
                        Foreground="#174A7E"
-                       FontSize="64"
+                       FontSize="58"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
-                       Margin="0,0,0,5"/>
+                       Margin="0,5,0,0"/>
 
         </StackPanel>
 
 
-        <!-- KHU VỰC SỐ -->
+        <!-- KHU VỰC HIỂN THỊ SỐ -->
         <Grid Grid.Row="1"
-              VerticalAlignment="Stretch"
-              Margin="0,0,0,10">
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
 
             <!-- SỐ BẮT ĐẦU -->
-            <TextBlock Grid.Row="0"
+            <TextBlock Grid.Column="0"
                        x:Name="txtDisplayStart"
                        Text="001"
                        Foreground="#000000"
@@ -58,18 +59,19 @@
                        VerticalAlignment="Center"/>
 
 
-            <!-- ĐẾN -->
-            <TextBlock Grid.Row="1"
-                       Text="ĐẾN"
-                       Foreground="#444444"
-                       FontSize="65"
+            <!-- DẤU GẠCH -->
+            <TextBlock Grid.Column="1"
+                       Text="  –  "
+                       Foreground="#333333"
+                       FontSize="190"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
-                       Margin="0,-15,0,-15"/>
+                       VerticalAlignment="Center"
+                       Margin="20,0,20,0"/>
 
 
             <!-- SỐ KẾT THÚC -->
-            <TextBlock Grid.Row="2"
+            <TextBlock Grid.Column="2"
                        x:Name="txtDisplayEnd"
                        Text="010"
                        Foreground="#000000"
