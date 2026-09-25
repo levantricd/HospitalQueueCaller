@@ -1,12 +1,15 @@
 ﻿<Window x:Class="HospitalQueueCaller.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="HỆ THỐNG GỌI SỐ THỨ TỰ"
-        Height="750"
-        Width="1200"
-        WindowStartupLocation="CenterScreen">
+        Title="Quản lý gọi số"
+        Height="600"
+        Width="850"
+        MinHeight="520"
+        MinWidth="750"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F6F8">
 
-    <Grid Margin="20">
+    <Grid Margin="15">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,16 +17,18 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+
         <!-- TIÊU ĐỀ -->
         <TextBlock Grid.Row="0"
-                   Text="HỆ THỐNG GỌI SỐ THỨ TỰ"
-                   FontSize="34"
+                   Text="QUẢN LÝ GỌI SỐ"
+                   FontSize="26"
                    FontWeight="Bold"
-                   Foreground="#111111"
+                   Foreground="#222222"
                    HorizontalAlignment="Center"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,12"/>
 
-        <!-- 2 BỘ SỐ -->
+
+        <!-- HAI BỘ SỐ -->
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
@@ -31,13 +36,17 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+
+            <!-- ========================= -->
             <!-- SỐ THƯỜNG -->
+            <!-- ========================= -->
+
             <GroupBox Grid.Column="0"
                       Header="SỐ THƯỜNG"
-                      FontSize="22"
+                      FontSize="19"
                       FontWeight="Bold"
-                      Margin="10"
-                      Padding="15">
+                      Margin="5"
+                      Padding="12">
 
                 <Grid>
 
@@ -45,86 +54,91 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
+
+                    <!-- SỐ BẮT ĐẦU -->
                     <TextBlock Grid.Row="0"
                                Text="Số bắt đầu"
-                               FontSize="18"/>
+                               FontSize="16"/>
 
                     <TextBox Grid.Row="1"
                              x:Name="txtNormalStart"
                              Text="1"
-                             FontSize="24"
-                             Height="45"
-                             Margin="0,5,0,15"/>
+                             FontSize="21"
+                             Height="40"
+                             Margin="0,4,0,10"/>
 
+
+                    <!-- BƯỚC TĂNG -->
                     <TextBlock Grid.Row="2"
                                Text="Bước tăng"
-                               FontSize="18"/>
+                               FontSize="16"/>
 
                     <TextBox Grid.Row="3"
                              x:Name="txtNormalStep"
                              Text="10"
-                             FontSize="24"
-                             Height="45"
-                             Margin="0,5,0,15"/>
+                             FontSize="21"
+                             Height="40"
+                             VerticalAlignment="Top"
+                             Margin="0,4,0,10"/>
 
+
+                    <!-- NÚT + DÃY -->
                     <StackPanel Grid.Row="4">
 
-                        <TextBlock Text="DÃY ĐANG GỌI"
-                                   FontSize="18"
+                        <TextBlock Text="Dãy đang gọi"
+                                   FontSize="16"
                                    HorizontalAlignment="Center"/>
 
                         <TextBlock x:Name="txtNormalRange"
-                                   Text="001 - 010"
-                                   FontSize="46"
+                                   Text="---"
+                                   FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="#174A7E"
                                    HorizontalAlignment="Center"
-                                   Margin="0,5,0,15"/>
+                                   Margin="0,2,0,8"/>
 
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
 
                             <Button x:Name="btnStartNormal"
                                     Content="BẮT ĐẦU"
-                                    Width="180"
-                                    Height="55"
-                                    FontSize="20"
-                                    Margin="5"/>
+                                    Width="145"
+                                    Height="48"
+                                    FontSize="18"
+                                    FontWeight="Bold"
+                                    Margin="3"/>
 
                             <Button x:Name="btnNextNormal"
                                     Content="GỌI TIẾP"
-                                    Width="180"
-                                    Height="55"
-                                    FontSize="20"
-                                    Margin="5"/>
+                                    Width="145"
+                                    Height="48"
+                                    FontSize="18"
+                                    FontWeight="Bold"
+                                    Margin="3"/>
 
                         </StackPanel>
-
-                        <Button x:Name="btnResetNormal"
-                                Content="RESET SỐ THƯỜNG"
-                                Width="250"
-                                Height="45"
-                                FontSize="17"
-                                HorizontalAlignment="Center"
-                                Margin="5"/>
 
                     </StackPanel>
 
                 </Grid>
+
             </GroupBox>
 
 
+            <!-- ========================= -->
             <!-- SỐ ƯU TIÊN -->
+            <!-- ========================= -->
+
             <GroupBox Grid.Column="1"
                       Header="SỐ ƯU TIÊN"
-                      FontSize="22"
+                      FontSize="19"
                       FontWeight="Bold"
-                      Margin="10"
-                      Padding="15">
+                      Margin="5"
+                      Padding="12">
 
                 <Grid>
 
@@ -132,107 +146,125 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
+
+                    <!-- SỐ BẮT ĐẦU -->
                     <TextBlock Grid.Row="0"
                                Text="Số bắt đầu"
-                               FontSize="18"/>
+                               FontSize="16"/>
 
                     <TextBox Grid.Row="1"
                              x:Name="txtPriorityStart"
                              Text="1"
-                             FontSize="24"
-                             Height="45"
-                             Margin="0,5,0,15"/>
+                             FontSize="21"
+                             Height="40"
+                             Margin="0,4,0,10"/>
 
+
+                    <!-- BƯỚC TĂNG -->
                     <TextBlock Grid.Row="2"
                                Text="Bước tăng"
-                               FontSize="18"/>
+                               FontSize="16"/>
 
                     <TextBox Grid.Row="3"
                              x:Name="txtPriorityStep"
                              Text="5"
-                             FontSize="24"
-                             Height="45"
-                             Margin="0,5,0,15"/>
+                             FontSize="21"
+                             Height="40"
+                             VerticalAlignment="Top"
+                             Margin="0,4,0,10"/>
 
+
+                    <!-- NÚT + DÃY -->
                     <StackPanel Grid.Row="4">
 
-                        <TextBlock Text="DÃY ĐANG GỌI"
-                                   FontSize="18"
+                        <TextBlock Text="Dãy đang gọi"
+                                   FontSize="16"
                                    HorizontalAlignment="Center"/>
 
                         <TextBlock x:Name="txtPriorityRange"
-                                   Text="001 - 005"
-                                   FontSize="46"
+                                   Text="---"
+                                   FontSize="34"
                                    FontWeight="Bold"
                                    Foreground="#8B0000"
                                    HorizontalAlignment="Center"
-                                   Margin="0,5,0,15"/>
+                                   Margin="0,2,0,8"/>
 
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
 
                             <Button x:Name="btnStartPriority"
                                     Content="BẮT ĐẦU"
-                                    Width="180"
-                                    Height="55"
-                                    FontSize="20"
-                                    Margin="5"/>
+                                    Width="145"
+                                    Height="48"
+                                    FontSize="18"
+                                    FontWeight="Bold"
+                                    Margin="3"/>
 
                             <Button x:Name="btnNextPriority"
                                     Content="GỌI TIẾP"
-                                    Width="180"
-                                    Height="55"
-                                    FontSize="20"
-                                    Margin="5"/>
+                                    Width="145"
+                                    Height="48"
+                                    FontSize="18"
+                                    FontWeight="Bold"
+                                    Margin="3"/>
 
                         </StackPanel>
-
-                        <Button x:Name="btnResetPriority"
-                                Content="RESET SỐ ƯU TIÊN"
-                                Width="250"
-                                Height="45"
-                                FontSize="17"
-                                HorizontalAlignment="Center"
-                                Margin="5"/>
 
                     </StackPanel>
 
                 </Grid>
+
             </GroupBox>
 
         </Grid>
 
 
+        <!-- ========================= -->
         <!-- TRẠNG THÁI -->
+        <!-- ========================= -->
+
         <Border Grid.Row="2"
-                BorderBrush="#999999"
+                BorderBrush="#BBBBBB"
                 BorderThickness="1"
-                Padding="15"
-                Margin="10">
+                Background="White"
+                Padding="10"
+                Margin="5,10,5,0">
 
-            <StackPanel>
+            <Grid>
 
-                <TextBlock Text="TRẠNG THÁI HỆ THỐNG"
-                           FontSize="18"
-                           FontWeight="Bold"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="txtActiveMode"
-                           Text="Chưa gọi số"
-                           FontSize="24"
+                <TextBlock Grid.Column="0"
+                           Text="ĐANG GỌI:"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1"
+                           x:Name="txtActiveMode"
+                           Text="CHƯA GỌI SỐ"
+                           FontSize="19"
                            FontWeight="Bold"
                            Foreground="#174A7E"
-                           Margin="0,5,0,0"/>
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"/>
 
-                <TextBlock x:Name="txtStatus"
-                           Text="Trạng thái: Sẵn sàng"
-                           FontSize="18"
-                           Margin="0,5,0,0"/>
+                <TextBlock Grid.Column="1"
+                           x:Name="txtStatus"
+                           Text="Sẵn sàng"
+                           FontSize="14"
+                           Foreground="#555555"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"/>
 
-            </StackPanel>
+            </Grid>
 
         </Border>
 

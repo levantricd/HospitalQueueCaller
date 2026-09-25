@@ -2,13 +2,14 @@
 using System.IO;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Media;
 
 namespace HospitalQueueCaller
 {
     public partial class MainWindow : Window
     {
-        private DisplayWindow displayWindow;
-        private DisplayWindow displayWindow2;
+        private readonly DisplayWindow displayWindow;
+        private readonly DisplayWindow displayWindow2;
 
         private QueueState state = new QueueState();
 
@@ -18,6 +19,7 @@ namespace HospitalQueueCaller
                     Environment.SpecialFolder.ApplicationData),
                 "HospitalQueueCaller",
                 "queue.json");
+
 
         public MainWindow()
         {
@@ -39,19 +41,24 @@ namespace HospitalQueueCaller
 
             btnStartNormal.Click += BtnStartNormal_Click;
             btnNextNormal.Click += BtnNextNormal_Click;
-            btnResetNormal.Click += BtnResetNormal_Click;
 
             btnStartPriority.Click += BtnStartPriority_Click;
             btnNextPriority.Click += BtnNextPriority_Click;
-            btnResetPriority.Click += BtnResetPriority_Click;
 
             Closing += MainWindow_Closing;
 
             UpdateUI();
+
+            // Nếu đã có dãy đang gọi thì khôi phục lên màn hình
+            if (!string.IsNullOrWhiteSpace(state.ActiveMode))
+            {
+                UpdateDisplays();
+            }
         }
 
+
         // =========================================================
-        // SỐ THƯỜNG
+        // SỐ THƯỜNG - BẮT ĐẦU
         // =========================================================
 
         private void BtnStartNormal_Click(
@@ -61,6 +68,7 @@ namespace HospitalQueueCaller
             if (!ReadNormalConfig())
                 return;
 
+            // BẮT ĐẦU = ĐẶT LẠI DÃY
             state.NormalLastStart =
                 state.NormalStart;
 
@@ -69,17 +77,23 @@ namespace HospitalQueueCaller
                 state.NormalStep -
                 1;
 
-            state.ActiveMode = "SỐ THƯỜNG";
+            state.ActiveMode =
+                "SỐ THƯỜNG";
 
             SaveState();
             UpdateUI();
             UpdateDisplays();
 
             txtStatus.Text =
-                $"Đã bắt đầu số thường: " +
+                $"Số thường: " +
                 $"{state.NormalLastStart:D3} - " +
                 $"{state.NormalLastEnd:D3}";
         }
+
+
+        // =========================================================
+        // SỐ THƯỜNG - GỌI TIẾP
+        // =========================================================
 
         private void BtnNextNormal_Click(
             object sender,
@@ -88,6 +102,7 @@ namespace HospitalQueueCaller
             if (!ReadNormalConfig())
                 return;
 
+            // Chưa có dãy → tự động bắt đầu
             if (state.NormalLastStart <= 0)
             {
                 BtnStartNormal_Click(sender, e);
@@ -105,35 +120,22 @@ namespace HospitalQueueCaller
                 state.NormalStep -
                 1;
 
-            state.ActiveMode = "SỐ THƯỜNG";
+            state.ActiveMode =
+                "SỐ THƯỜNG";
 
             SaveState();
             UpdateUI();
             UpdateDisplays();
 
             txtStatus.Text =
-                $"Đã gọi số thường: " +
+                $"Số thường: " +
                 $"{state.NormalLastStart:D3} - " +
                 $"{state.NormalLastEnd:D3}";
         }
 
-        private void BtnResetNormal_Click(
-            object sender,
-            RoutedEventArgs e)
-        {
-            state.NormalLastStart = 0;
-            state.NormalLastEnd = 0;
-
-            SaveState();
-            UpdateUI();
-
-            txtStatus.Text =
-                "Đã reset số thường.";
-        }
-
 
         // =========================================================
-        // SỐ ƯU TIÊN
+        // SỐ ƯU TIÊN - BẮT ĐẦU
         // =========================================================
 
         private void BtnStartPriority_Click(
@@ -143,6 +145,7 @@ namespace HospitalQueueCaller
             if (!ReadPriorityConfig())
                 return;
 
+            // BẮT ĐẦU = ĐẶT LẠI DÃY
             state.PriorityLastStart =
                 state.PriorityStart;
 
@@ -151,17 +154,23 @@ namespace HospitalQueueCaller
                 state.PriorityStep -
                 1;
 
-            state.ActiveMode = "SỐ ƯU TIÊN";
+            state.ActiveMode =
+                "SỐ ƯU TIÊN";
 
             SaveState();
             UpdateUI();
             UpdateDisplays();
 
             txtStatus.Text =
-                $"Đã bắt đầu số ưu tiên: " +
+                $"Số ưu tiên: " +
                 $"{state.PriorityLastStart:D3} - " +
                 $"{state.PriorityLastEnd:D3}";
         }
+
+
+        // =========================================================
+        // SỐ ƯU TIÊN - GỌI TIẾP
+        // =========================================================
 
         private void BtnNextPriority_Click(
             object sender,
@@ -170,6 +179,7 @@ namespace HospitalQueueCaller
             if (!ReadPriorityConfig())
                 return;
 
+            // Chưa có dãy → tự động bắt đầu
             if (state.PriorityLastStart <= 0)
             {
                 BtnStartPriority_Click(sender, e);
@@ -187,35 +197,22 @@ namespace HospitalQueueCaller
                 state.PriorityStep -
                 1;
 
-            state.ActiveMode = "SỐ ƯU TIÊN";
+            state.ActiveMode =
+                "SỐ ƯU TIÊN";
 
             SaveState();
             UpdateUI();
             UpdateDisplays();
 
             txtStatus.Text =
-                $"Đã gọi số ưu tiên: " +
+                $"Số ưu tiên: " +
                 $"{state.PriorityLastStart:D3} - " +
                 $"{state.PriorityLastEnd:D3}";
         }
 
-        private void BtnResetPriority_Click(
-            object sender,
-            RoutedEventArgs e)
-        {
-            state.PriorityLastStart = 0;
-            state.PriorityLastEnd = 0;
-
-            SaveState();
-            UpdateUI();
-
-            txtStatus.Text =
-                "Đã reset số ưu tiên.";
-        }
-
 
         // =========================================================
-        // ĐỌC CẤU HÌNH
+        // ĐỌC CẤU HÌNH SỐ THƯỜNG
         // =========================================================
 
         private bool ReadNormalConfig()
@@ -230,7 +227,10 @@ namespace HospitalQueueCaller
                 step <= 0)
             {
                 MessageBox.Show(
-                    "Số bắt đầu và bước tăng của số thường không hợp lệ.");
+                    "Vui lòng nhập số bắt đầu và bước tăng hợp lệ.",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
 
                 return false;
             }
@@ -240,6 +240,11 @@ namespace HospitalQueueCaller
 
             return true;
         }
+
+
+        // =========================================================
+        // ĐỌC CẤU HÌNH SỐ ƯU TIÊN
+        // =========================================================
 
         private bool ReadPriorityConfig()
         {
@@ -253,7 +258,10 @@ namespace HospitalQueueCaller
                 step <= 0)
             {
                 MessageBox.Show(
-                    "Số bắt đầu và bước tăng của số ưu tiên không hợp lệ.");
+                    "Vui lòng nhập số bắt đầu và bước tăng hợp lệ.",
+                    "Thông báo",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
 
                 return false;
             }
@@ -266,7 +274,7 @@ namespace HospitalQueueCaller
 
 
         // =========================================================
-        // CẬP NHẬT GIAO DIỆN
+        // CẬP NHẬT GIAO DIỆN QUẢN LÝ
         // =========================================================
 
         private void UpdateUI()
@@ -284,6 +292,7 @@ namespace HospitalQueueCaller
                 state.PriorityStep.ToString();
 
 
+            // SỐ THƯỜNG
             if (state.NormalLastStart > 0)
             {
                 txtNormalRange.Text =
@@ -296,6 +305,7 @@ namespace HospitalQueueCaller
             }
 
 
+            // SỐ ƯU TIÊN
             if (state.PriorityLastStart > 0)
             {
                 txtPriorityRange.Text =
@@ -308,36 +318,41 @@ namespace HospitalQueueCaller
             }
 
 
-            if (!string.IsNullOrWhiteSpace(
-                    state.ActiveMode))
+            // CHẾ ĐỘ ĐANG GỌI
+            if (state.ActiveMode ==
+                "SỐ ƯU TIÊN")
             {
                 txtActiveMode.Text =
-                    $"ĐANG GỌI: {state.ActiveMode}";
+                    "SỐ ƯU TIÊN";
 
-                if (state.ActiveMode ==
-                    "SỐ ƯU TIÊN")
-                {
-                    txtActiveMode.Foreground =
-                        new System.Windows.Media.SolidColorBrush(
-                            System.Windows.Media.Colors.DarkRed);
-                }
-                else
-                {
-                    txtActiveMode.Foreground =
-                        new System.Windows.Media.SolidColorBrush(
-                            System.Windows.Media.Colors.DarkBlue);
-                }
+                txtActiveMode.Foreground =
+                    new SolidColorBrush(
+                        Colors.DarkRed);
+            }
+            else if (state.ActiveMode ==
+                     "SỐ THƯỜNG")
+            {
+                txtActiveMode.Text =
+                    "SỐ THƯỜNG";
+
+                txtActiveMode.Foreground =
+                    new SolidColorBrush(
+                        Colors.DarkBlue);
             }
             else
             {
                 txtActiveMode.Text =
                     "CHƯA GỌI SỐ";
+
+                txtActiveMode.Foreground =
+                    new SolidColorBrush(
+                        Colors.DarkGray);
             }
         }
 
 
         // =========================================================
-        // CẬP NHẬT 2 MÀN HÌNH
+        // CẬP NHẬT 2 MÀN HÌNH HIỂN THỊ
         // =========================================================
 
         private void UpdateDisplays()
@@ -358,7 +373,8 @@ namespace HospitalQueueCaller
                 mode =
                     "SỐ ƯU TIÊN";
             }
-            else
+            else if (state.ActiveMode ==
+                     "SỐ THƯỜNG")
             {
                 start =
                     state.NormalLastStart;
@@ -368,6 +384,10 @@ namespace HospitalQueueCaller
 
                 mode =
                     "SỐ THƯỜNG";
+            }
+            else
+            {
+                return;
             }
 
             if (start <= 0)
@@ -413,7 +433,10 @@ namespace HospitalQueueCaller
             {
                 MessageBox.Show(
                     "Không thể lưu trạng thái:\n" +
-                    ex.Message);
+                    ex.Message,
+                    "Lỗi",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -452,7 +475,7 @@ namespace HospitalQueueCaller
                     File.ReadAllText(
                         SaveFile);
 
-                var loaded =
+                QueueState? loaded =
                     JsonSerializer.Deserialize<QueueState>(
                         json);
 
@@ -469,7 +492,9 @@ namespace HospitalQueueCaller
                     NormalStep = 10,
 
                     PriorityStart = 1,
-                    PriorityStep = 5
+                    PriorityStep = 5,
+
+                    ActiveMode = ""
                 };
             }
         }
@@ -496,22 +521,28 @@ namespace HospitalQueueCaller
 
 
         // =========================================================
-        // CLASS LƯU TRẠNG THÁI
+        // MODEL LƯU TRẠNG THÁI
         // =========================================================
 
         private class QueueState
         {
             public int NormalStart { get; set; } = 1;
+
             public int NormalStep { get; set; } = 10;
 
             public int NormalLastStart { get; set; }
+
             public int NormalLastEnd { get; set; }
 
+
             public int PriorityStart { get; set; } = 1;
+
             public int PriorityStep { get; set; } = 5;
 
             public int PriorityLastStart { get; set; }
+
             public int PriorityLastEnd { get; set; }
+
 
             public string ActiveMode { get; set; } = "";
         }
