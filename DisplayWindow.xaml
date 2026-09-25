@@ -1,0 +1,35 @@
+﻿<Window x:Class="HospitalQueueCaller.DisplayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        WindowState="Maximized"
+        Background="Black"
+        ShowInTaskbar="False">
+
+    <Grid>
+        <StackPanel VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+
+            <TextBlock Text="SỐ THỨ TỰ"
+                       Foreground="White"
+                       FontSize="50"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock x:Name="txtDisplayNumber"
+                       Text="000"
+                       Foreground="White"
+                       FontSize="250"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock x:Name="txtDisplayInfo"
+                       Text="Vui lòng chờ đến lượt"
+                       Foreground="White"
+                       FontSize="35"
+                       HorizontalAlignment="Center"/>
+
+        </StackPanel>
+    </Grid>
+
+</Window>
