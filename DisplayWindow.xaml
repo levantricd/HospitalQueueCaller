@@ -30,15 +30,15 @@
 
                 <TextBlock Text="XIN MỜI SỐ THỨ TỰ"
                            Foreground="#111111"
-                           FontSize="68"
+                           FontSize="90"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"/>
 
-                <!-- Chỉ hiển thị khi là SỐ ƯU TIÊN -->
+                <!-- Chỉ hiển thị đối với số ưu tiên -->
                 <TextBlock x:Name="txtDisplayMode"
                            Text=""
                            Foreground="#8B0000"
-                           FontSize="80"
+                           FontSize="120"
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
                            Margin="0,5,0,0"/>

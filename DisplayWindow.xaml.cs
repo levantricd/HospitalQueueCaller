@@ -16,9 +16,6 @@ namespace HospitalQueueCaller
             int end,
             string mode)
         {
-            txtDisplayMode.Text =
-                mode;
-
             txtDisplayStart.Text =
                 start.ToString("D3");
 
@@ -26,15 +23,30 @@ namespace HospitalQueueCaller
                 end.ToString("D3");
 
 
-            if (mode ==
-                "SỐ ƯU TIÊN")
+            // =====================================================
+            // SỐ ƯU TIÊN
+            // =====================================================
+
+            if (mode == "SỐ ƯU TIÊN")
             {
+                txtDisplayMode.Text =
+                    "SỐ ƯU TIÊN";
+
                 txtDisplayMode.Foreground =
                     new SolidColorBrush(
                         Colors.DarkRed);
             }
+
+
+            // =====================================================
+            // SỐ THƯỜNG
+            // =====================================================
+
             else
             {
+                // Không hiển thị chữ "SỐ THƯỜNG"
+                txtDisplayMode.Text = "";
+
                 txtDisplayMode.Foreground =
                     new SolidColorBrush(
                         Colors.DarkBlue);
