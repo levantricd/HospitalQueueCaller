@@ -6,7 +6,6 @@ using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
-using WpfApplication = System.Windows.Application;
 using WpfMessageBox = System.Windows.MessageBox;
 using WpfMessageBoxButton = System.Windows.MessageBoxButton;
 using WpfMessageBoxImage = System.Windows.MessageBoxImage;
@@ -21,7 +20,8 @@ namespace HospitalQueueCaller
 
         private int currentScreenIndex = 0;
 
-        private Forms.Screen[] screens = Array.Empty<Forms.Screen>();
+        private Forms.Screen[] screens =
+            Array.Empty<Forms.Screen>();
 
 
         private string SaveFile =>
@@ -44,6 +44,11 @@ namespace HospitalQueueCaller
             int cy,
             uint uFlags);
 
+
+        // =========================================================
+        // KHỞI TẠO
+        // =========================================================
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,15 +57,52 @@ namespace HospitalQueueCaller
 
             LoadState();
 
-            btnStartNormal.Click += BtnStartNormal_Click;
-            btnNextNormal.Click += BtnNextNormal_Click;
 
-            btnStartPriority.Click += BtnStartPriority_Click;
-            btnNextPriority.Click += BtnNextPriority_Click;
+            // -----------------------------------------------------
+            // SỐ THƯỜNG
+            // -----------------------------------------------------
 
-            btnSwitchScreen.Click += BtnSwitchScreen_Click;
+            btnStartNormal.Click +=
+                BtnStartNormal_Click;
 
-            Closing += MainWindow_Closing;
+            btnNextNormal.Click +=
+                BtnNextNormal_Click;
+
+
+            // -----------------------------------------------------
+            // SỐ ƯU TIÊN
+            // -----------------------------------------------------
+
+            btnStartPriority.Click +=
+                BtnStartPriority_Click;
+
+            btnNextPriority.Click +=
+                BtnNextPriority_Click;
+
+
+            // -----------------------------------------------------
+            // MỜI ƯU TIÊN TRỰC TIẾP
+            // -----------------------------------------------------
+
+            btnPriorityDirect.Click +=
+                BtnPriorityDirect_Click;
+
+
+            // -----------------------------------------------------
+            // MÀN HÌNH
+            // -----------------------------------------------------
+
+            btnSwitchScreen.Click +=
+                BtnSwitchScreen_Click;
+
+
+            Closing +=
+                MainWindow_Closing;
+
+
+            // -----------------------------------------------------
+            // CẬP NHẬT GIAO DIỆN
+            // -----------------------------------------------------
 
             UpdateUI();
 
@@ -68,9 +110,19 @@ namespace HospitalQueueCaller
 
             MoveDisplayToPreferredScreen();
 
-            if (!string.IsNullOrWhiteSpace(state.ActiveMode))
+
+            // -----------------------------------------------------
+            // KHÔI PHỤC MÀN HÌNH
+            // -----------------------------------------------------
+
+            if (!string.IsNullOrWhiteSpace(
+                    state.ActiveMode))
             {
                 UpdateDisplays();
+            }
+            else
+            {
+                UpdatePriorityDirectNotice();
             }
         }
 
@@ -81,7 +133,8 @@ namespace HospitalQueueCaller
 
         private void DetectScreens()
         {
-            screens = Forms.Screen.AllScreens;
+            screens =
+                Forms.Screen.AllScreens;
 
             if (screens.Length == 0)
             {
@@ -91,7 +144,8 @@ namespace HospitalQueueCaller
                 return;
             }
 
-            if (currentScreenIndex >= screens.Length)
+            if (currentScreenIndex >=
+                screens.Length)
             {
                 currentScreenIndex = 0;
             }
@@ -110,10 +164,11 @@ namespace HospitalQueueCaller
                 return;
 
 
-            // Có màn hình phụ
             if (screens.Length > 1)
             {
-                for (int i = 0; i < screens.Length; i++)
+                for (int i = 0;
+                     i < screens.Length;
+                     i++)
                 {
                     if (!screens[i].Primary)
                     {
@@ -124,7 +179,6 @@ namespace HospitalQueueCaller
             }
             else
             {
-                // Chỉ có một màn hình
                 currentScreenIndex = 0;
             }
 
@@ -137,7 +191,6 @@ namespace HospitalQueueCaller
         // =========================================================
         // ĐƯA DISPLAY WINDOW SANG MÀN HÌNH
         // =========================================================
-
 
         private void MoveDisplayToScreen(
             int screenIndex)
@@ -153,15 +206,12 @@ namespace HospitalQueueCaller
                 screenIndex = 0;
             }
 
-            currentScreenIndex = screenIndex;
+            currentScreenIndex =
+                screenIndex;
 
             Forms.Screen screen =
                 screens[currentScreenIndex];
 
-
-            // =========================================================
-            // CẤU HÌNH DISPLAY WINDOW
-            // =========================================================
 
             displayWindow.WindowState =
                 WindowState.Normal;
@@ -173,11 +223,9 @@ namespace HospitalQueueCaller
                 ResizeMode.NoResize;
 
 
-            // =========================================================
+            // -----------------------------------------------------
             // MÀN HÌNH CHÍNH
-            // =========================================================
-            // Khi DisplayWindow nằm trên màn hình chính,
-            // cửa sổ quản lý phải nằm trên để không bị che.
+            // -----------------------------------------------------
 
             if (screen.Primary)
             {
@@ -186,25 +234,16 @@ namespace HospitalQueueCaller
             }
             else
             {
-                // Màn hình phụ: DisplayWindow luôn nằm trên cùng
                 displayWindow.Topmost = true;
                 Topmost = false;
             }
 
-
-            // =========================================================
-            // HIỂN THỊ WINDOW TRƯỚC
-            // =========================================================
 
             if (!displayWindow.IsVisible)
             {
                 displayWindow.Show();
             }
 
-
-            // =========================================================
-            // ĐẶT WINDOW THEO PIXEL THỰC CỦA MÀN HÌNH
-            // =========================================================
 
             IntPtr hwnd =
                 new WindowInteropHelper(
@@ -214,8 +253,8 @@ namespace HospitalQueueCaller
             {
                 IntPtr insertAfter =
                     screen.Primary
-                        ? new IntPtr(-2)   // HWND_NOTOPMOST
-                        : new IntPtr(-1);  // HWND_TOPMOST
+                        ? new IntPtr(-2)
+                        : new IntPtr(-1);
 
                 SetWindowPos(
                     hwnd,
@@ -227,10 +266,6 @@ namespace HospitalQueueCaller
                     SWP_NOACTIVATE);
             }
 
-
-            // =========================================================
-            // CẬP NHẬT THÔNG TIN
-            // =========================================================
 
             txtCurrentScreen.Text =
                 $"Màn hình {currentScreenIndex + 1}: " +
@@ -266,7 +301,8 @@ namespace HospitalQueueCaller
 
             currentScreenIndex++;
 
-            if (currentScreenIndex >= screens.Length)
+            if (currentScreenIndex >=
+                screens.Length)
             {
                 currentScreenIndex = 0;
             }
@@ -288,6 +324,7 @@ namespace HospitalQueueCaller
             if (!ReadNormalConfig())
                 return;
 
+
             state.NormalLastStart =
                 state.NormalStart;
 
@@ -296,14 +333,17 @@ namespace HospitalQueueCaller
                 state.NormalStep -
                 1;
 
+
             state.ActiveMode =
                 "SỐ THƯỜNG";
+
 
             SaveState();
 
             UpdateUI();
 
             UpdateDisplays();
+
 
             txtStatus.Text =
                 $"Số thường: " +
@@ -322,6 +362,7 @@ namespace HospitalQueueCaller
         {
             if (!ReadNormalConfig())
                 return;
+
 
             if (state.NormalLastStart <= 0)
             {
@@ -345,14 +386,17 @@ namespace HospitalQueueCaller
                 state.NormalStep -
                 1;
 
+
             state.ActiveMode =
                 "SỐ THƯỜNG";
+
 
             SaveState();
 
             UpdateUI();
 
             UpdateDisplays();
+
 
             txtStatus.Text =
                 $"Số thường: " +
@@ -372,6 +416,7 @@ namespace HospitalQueueCaller
             if (!ReadPriorityConfig())
                 return;
 
+
             state.PriorityLastStart =
                 state.PriorityStart;
 
@@ -380,14 +425,17 @@ namespace HospitalQueueCaller
                 state.PriorityStep -
                 1;
 
+
             state.ActiveMode =
                 "SỐ ƯU TIÊN";
+
 
             SaveState();
 
             UpdateUI();
 
             UpdateDisplays();
+
 
             txtStatus.Text =
                 $"Số ưu tiên: " +
@@ -406,6 +454,7 @@ namespace HospitalQueueCaller
         {
             if (!ReadPriorityConfig())
                 return;
+
 
             if (state.PriorityLastStart <= 0)
             {
@@ -429,14 +478,17 @@ namespace HospitalQueueCaller
                 state.PriorityStep -
                 1;
 
+
             state.ActiveMode =
                 "SỐ ƯU TIÊN";
+
 
             SaveState();
 
             UpdateUI();
 
             UpdateDisplays();
+
 
             txtStatus.Text =
                 $"Số ưu tiên: " +
@@ -446,7 +498,81 @@ namespace HospitalQueueCaller
 
 
         // =========================================================
-        // ĐỌC CẤU HÌNH
+        // ƯU TIÊN - MỜI TRỰC TIẾP
+        // =========================================================
+
+        private void BtnPriorityDirect_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            // -----------------------------------------------------
+            // Nếu chưa bật:
+            // Bật thông báo mời ưu tiên đến quầy.
+            // -----------------------------------------------------
+
+            if (!state.PriorityDirectNotice)
+            {
+                state.PriorityDirectNotice = true;
+
+                btnPriorityDirect.Content =
+                    "KẾT THÚC MỜI ƯU TIÊN";
+
+                txtStatus.Text =
+                    "Đang mời đối tượng ưu tiên " +
+                    "đến quầy tiếp nhận.";
+
+                SaveState();
+
+                UpdatePriorityDirectNotice();
+
+                return;
+            }
+
+
+            // -----------------------------------------------------
+            // Nếu đang bật:
+            // Tắt thông báo.
+            // -----------------------------------------------------
+
+            state.PriorityDirectNotice = false;
+
+            btnPriorityDirect.Content =
+                "MỜI ƯU TIÊN ĐẾN QUẦY";
+
+            txtStatus.Text =
+                "Đã kết thúc mời ưu tiên trực tiếp.";
+
+            SaveState();
+
+            UpdatePriorityDirectNotice();
+        }
+
+
+        // =========================================================
+        // CẬP NHẬT THÔNG BÁO ƯU TIÊN TRỰC TIẾP
+        // =========================================================
+
+        private void UpdatePriorityDirectNotice()
+        {
+            if (state.PriorityDirectNotice)
+            {
+                displayWindow.ShowPriorityDirectNotice();
+
+                btnPriorityDirect.Content =
+                    "KẾT THÚC MỜI ƯU TIÊN";
+            }
+            else
+            {
+                displayWindow.HidePriorityDirectNotice();
+
+                btnPriorityDirect.Content =
+                    "MỜI ƯU TIÊN ĐẾN QUẦY";
+            }
+        }
+
+
+        // =========================================================
+        // ĐỌC CẤU HÌNH SỐ THƯỜNG
         // =========================================================
 
         private bool ReadNormalConfig()
@@ -466,12 +592,18 @@ namespace HospitalQueueCaller
                 return false;
             }
 
+
             state.NormalStart = start;
+
             state.NormalStep = step;
 
             return true;
         }
 
+
+        // =========================================================
+        // ĐỌC CẤU HÌNH SỐ ƯU TIÊN
+        // =========================================================
 
         private bool ReadPriorityConfig()
         {
@@ -490,7 +622,9 @@ namespace HospitalQueueCaller
                 return false;
             }
 
+
             state.PriorityStart = start;
+
             state.PriorityStep = step;
 
             return true;
@@ -509,12 +643,17 @@ namespace HospitalQueueCaller
             txtNormalStep.Text =
                 state.NormalStep.ToString();
 
+
             txtPriorityStart.Text =
                 state.PriorityStart.ToString();
 
             txtPriorityStep.Text =
                 state.PriorityStep.ToString();
 
+
+            // -----------------------------------------------------
+            // SỐ THƯỜNG
+            // -----------------------------------------------------
 
             if (state.NormalLastStart > 0)
             {
@@ -524,9 +663,14 @@ namespace HospitalQueueCaller
             }
             else
             {
-                txtNormalRange.Text = "---";
+                txtNormalRange.Text =
+                    "---";
             }
 
+
+            // -----------------------------------------------------
+            // SỐ ƯU TIÊN
+            // -----------------------------------------------------
 
             if (state.PriorityLastStart > 0)
             {
@@ -536,9 +680,14 @@ namespace HospitalQueueCaller
             }
             else
             {
-                txtPriorityRange.Text = "---";
+                txtPriorityRange.Text =
+                    "---";
             }
 
+
+            // -----------------------------------------------------
+            // CHẾ ĐỘ ĐANG GỌI
+            // -----------------------------------------------------
 
             if (state.ActiveMode ==
                 "SỐ ƯU TIÊN")
@@ -569,6 +718,22 @@ namespace HospitalQueueCaller
                     new SolidColorBrush(
                         Colors.DarkGray);
             }
+
+
+            // -----------------------------------------------------
+            // NÚT ƯU TIÊN TRỰC TIẾP
+            // -----------------------------------------------------
+
+            if (state.PriorityDirectNotice)
+            {
+                btnPriorityDirect.Content =
+                    "KẾT THÚC MỜI ƯU TIÊN";
+            }
+            else
+            {
+                btnPriorityDirect.Content =
+                    "MỜI ƯU TIÊN ĐẾN QUẦY";
+            }
         }
 
 
@@ -582,6 +747,10 @@ namespace HospitalQueueCaller
             int end;
             string mode;
 
+
+            // -----------------------------------------------------
+            // XÁC ĐỊNH DÃY ĐANG GỌI
+            // -----------------------------------------------------
 
             if (state.ActiveMode ==
                 "SỐ ƯU TIÊN")
@@ -609,6 +778,8 @@ namespace HospitalQueueCaller
             }
             else
             {
+                UpdatePriorityDirectNotice();
+
                 return;
             }
 
@@ -617,14 +788,27 @@ namespace HospitalQueueCaller
                 return;
 
 
+            // -----------------------------------------------------
+            // HIỂN THỊ DÃY SỐ
+            // -----------------------------------------------------
+
             displayWindow.ShowRange(
                 start,
                 end,
                 mode);
 
 
-            // Đảm bảo display vẫn nằm trên
-            // đúng màn hình sau khi cập nhật
+            // -----------------------------------------------------
+            // HIỂN THỊ THÔNG BÁO ƯU TIÊN ĐỘC LẬP
+            // -----------------------------------------------------
+
+            UpdatePriorityDirectNotice();
+
+
+            // -----------------------------------------------------
+            // ĐẢM BẢO DISPLAY ĐANG HIỂN THỊ
+            // -----------------------------------------------------
+
             if (!displayWindow.IsVisible)
             {
                 MoveDisplayToScreen(
@@ -645,6 +829,7 @@ namespace HospitalQueueCaller
                     Path.GetDirectoryName(
                         SaveFile)!);
 
+
                 string json =
                     JsonSerializer.Serialize(
                         state,
@@ -652,6 +837,7 @@ namespace HospitalQueueCaller
                         {
                             WriteIndented = true
                         });
+
 
                 File.WriteAllText(
                     SaveFile,
@@ -680,7 +866,9 @@ namespace HospitalQueueCaller
                     PriorityStart = 1,
                     PriorityStep = 5,
 
-                    ActiveMode = ""
+                    ActiveMode = "",
+
+                    PriorityDirectNotice = false
                 };
 
                 return;
@@ -693,9 +881,11 @@ namespace HospitalQueueCaller
                     File.ReadAllText(
                         SaveFile);
 
+
                 QueueState? loaded =
                     JsonSerializer.Deserialize<QueueState>(
                         json);
+
 
                 if (loaded != null)
                 {
@@ -712,7 +902,9 @@ namespace HospitalQueueCaller
                     PriorityStart = 1,
                     PriorityStep = 5,
 
-                    ActiveMode = ""
+                    ActiveMode = "",
+
+                    PriorityDirectNotice = false
                 };
             }
         }
@@ -728,10 +920,12 @@ namespace HospitalQueueCaller
         {
             SaveState();
 
+
             if (displayWindow != null)
             {
                 displayWindow.Close();
             }
+
 
             System.Windows.Application.Current.Shutdown();
         }
@@ -743,6 +937,10 @@ namespace HospitalQueueCaller
 
         private class QueueState
         {
+            // -----------------------------------------------------
+            // SỐ THƯỜNG
+            // -----------------------------------------------------
+
             public int NormalStart { get; set; } = 1;
 
             public int NormalStep { get; set; } = 10;
@@ -751,6 +949,10 @@ namespace HospitalQueueCaller
 
             public int NormalLastEnd { get; set; }
 
+
+            // -----------------------------------------------------
+            // SỐ ƯU TIÊN
+            // -----------------------------------------------------
 
             public int PriorityStart { get; set; } = 1;
 
@@ -761,7 +963,22 @@ namespace HospitalQueueCaller
             public int PriorityLastEnd { get; set; }
 
 
+            // -----------------------------------------------------
+            // CHẾ ĐỘ ĐANG GỌI
+            // -----------------------------------------------------
+
             public string ActiveMode { get; set; } = "";
+
+
+            // -----------------------------------------------------
+            // MỜI ƯU TIÊN TRỰC TIẾP
+            // -----------------------------------------------------
+
+            public bool PriorityDirectNotice
+            {
+                get;
+                set;
+            } = false;
         }
     }
 }

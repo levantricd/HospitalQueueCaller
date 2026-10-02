@@ -45,8 +45,6 @@
                                FontWeight="Bold"
                                HorizontalAlignment="Center"/>
 
-                    <!-- Chỉ hiện khi đang gọi số ưu tiên -->
-
                     <TextBlock x:Name="txtDisplayMode"
                                Text=""
                                Foreground="#8B0000"
@@ -106,7 +104,7 @@
 
 
             <!-- ================================================= -->
-            <!-- KHU VỰC THÔNG BÁO ƯU TIÊN -->
+            <!-- KHU VỰC ƯU TIÊN -->
             <!-- ================================================= -->
 
             <Border Grid.Row="1"
@@ -117,39 +115,35 @@
                 <Grid>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
+
+                    <!-- TIÊU ĐỀ ƯU TIÊN -->
 
                     <TextBlock Grid.Row="0"
                                x:Name="txtPriorityNoticeTitle"
                                Text="ĐỐI TƯỢNG ƯU TIÊN"
                                Foreground="#8B0000"
-                               FontSize="60"
+                               FontSize="65"
                                FontWeight="Bold"
                                HorizontalAlignment="Center"
-                               Margin="0,22,0,0"/>
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,0,5"/>
 
+
+                    <!-- HÀNH ĐỘNG -->
 
                     <TextBlock Grid.Row="1"
                                x:Name="txtPriorityNotice"
                                Text="MỜI ĐẾN QUẦY TIẾP NHẬN"
                                Foreground="#111111"
-                               FontSize="70"
+                               FontSize="82"
                                FontWeight="Bold"
                                HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
                                Margin="0,5,0,0"/>
-
-
-                    <TextBlock Grid.Row="2"
-                               Text="KHÔNG CẦN CHỜ GỌI SỐ"
-                               Foreground="#333333"
-                               FontSize="42"
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"
-                               Margin="0,8,0,0"/>
 
                 </Grid>
 
