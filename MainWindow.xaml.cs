@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
@@ -29,6 +31,18 @@ namespace HospitalQueueCaller
                 "HospitalQueueCaller",
                 "queue.json");
 
+
+        private const uint SWP_NOACTIVATE = 0x0010;
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int X,
+            int Y,
+            int cx,
+            int cy,
+            uint uFlags);
 
         public MainWindow()
         {
@@ -124,6 +138,7 @@ namespace HospitalQueueCaller
         // ĐƯA DISPLAY WINDOW SANG MÀN HÌNH
         // =========================================================
 
+
         private void MoveDisplayToScreen(
             int screenIndex)
         {
@@ -138,41 +153,48 @@ namespace HospitalQueueCaller
                 screenIndex = 0;
             }
 
-            currentScreenIndex =
-                screenIndex;
+            currentScreenIndex = screenIndex;
 
             Forms.Screen screen =
                 screens[currentScreenIndex];
 
 
-            // Đóng trạng thái maximize WPF
+            // =========================================================
+            // CẤU HÌNH DISPLAY WINDOW
+            // =========================================================
+
             displayWindow.WindowState =
                 WindowState.Normal;
 
-
-            // Lấy kích thước màn hình thực tế
-            displayWindow.Left =
-                screen.Bounds.Left;
-
-            displayWindow.Top =
-                screen.Bounds.Top;
-
-            displayWindow.Width =
-                screen.Bounds.Width;
-
-            displayWindow.Height =
-                screen.Bounds.Height;
-
-
-            // Full màn hình
             displayWindow.WindowStyle =
                 WindowStyle.None;
 
             displayWindow.ResizeMode =
                 ResizeMode.NoResize;
 
-            displayWindow.Topmost = true;
 
+            // =========================================================
+            // MÀN HÌNH CHÍNH
+            // =========================================================
+            // Khi DisplayWindow nằm trên màn hình chính,
+            // cửa sổ quản lý phải nằm trên để không bị che.
+
+            if (screen.Primary)
+            {
+                displayWindow.Topmost = false;
+                Topmost = true;
+            }
+            else
+            {
+                // Màn hình phụ: DisplayWindow luôn nằm trên cùng
+                displayWindow.Topmost = true;
+                Topmost = false;
+            }
+
+
+            // =========================================================
+            // HIỂN THỊ WINDOW TRƯỚC
+            // =========================================================
 
             if (!displayWindow.IsVisible)
             {
@@ -180,8 +202,35 @@ namespace HospitalQueueCaller
             }
 
 
-            displayWindow.Activate();
+            // =========================================================
+            // ĐẶT WINDOW THEO PIXEL THỰC CỦA MÀN HÌNH
+            // =========================================================
 
+            IntPtr hwnd =
+                new WindowInteropHelper(
+                    displayWindow).Handle;
+
+            if (hwnd != IntPtr.Zero)
+            {
+                IntPtr insertAfter =
+                    screen.Primary
+                        ? new IntPtr(-2)   // HWND_NOTOPMOST
+                        : new IntPtr(-1);  // HWND_TOPMOST
+
+                SetWindowPos(
+                    hwnd,
+                    insertAfter,
+                    screen.Bounds.Left,
+                    screen.Bounds.Top,
+                    screen.Bounds.Width,
+                    screen.Bounds.Height,
+                    SWP_NOACTIVATE);
+            }
+
+
+            // =========================================================
+            // CẬP NHẬT THÔNG TIN
+            // =========================================================
 
             txtCurrentScreen.Text =
                 $"Màn hình {currentScreenIndex + 1}: " +
