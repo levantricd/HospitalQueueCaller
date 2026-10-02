@@ -208,8 +208,8 @@ namespace HospitalQueueCaller
                 WpfMessageBox.Show(
                     "Máy hiện chỉ có một màn hình.",
                     "Màn hình",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    WpfMessageBoxButton.OK,
+                    WpfMessageBoxImage.Information);
 
                 return;
             }
@@ -684,7 +684,7 @@ namespace HospitalQueueCaller
                 displayWindow.Close();
             }
 
-            WpfApplication.Current.Shutdown();
+            System.Windows.Application.Current.Shutdown();
         }
 
 
