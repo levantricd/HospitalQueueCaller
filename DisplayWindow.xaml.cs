@@ -10,12 +10,14 @@ namespace HospitalQueueCaller
             InitializeComponent();
         }
 
+
         public void ShowRange(
             int start,
             int end,
             string mode)
         {
-            txtDisplayMode.Text = mode;
+            txtDisplayMode.Text =
+                mode;
 
             txtDisplayStart.Text =
                 start.ToString("D3");
@@ -23,7 +25,9 @@ namespace HospitalQueueCaller
             txtDisplayEnd.Text =
                 end.ToString("D3");
 
-            if (mode == "SỐ ƯU TIÊN")
+
+            if (mode ==
+                "SỐ ƯU TIÊN")
             {
                 txtDisplayMode.Foreground =
                     new SolidColorBrush(
