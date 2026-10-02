@@ -15,98 +15,145 @@
               Height="1080">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="760"/>
+                <RowDefinition Height="320"/>
             </Grid.RowDefinitions>
 
 
             <!-- ================================================= -->
-            <!-- TIÊU ĐỀ -->
+            <!-- KHU VỰC GỌI SỐ CHÍNH -->
             <!-- ================================================= -->
 
-            <StackPanel Grid.Row="0"
-                        HorizontalAlignment="Center"
-                        Margin="0,30,0,0">
+            <Grid Grid.Row="0"
+                  Background="#FFFDF7">
 
-                <TextBlock Text="XIN MỜI SỐ THỨ TỰ"
-                           Foreground="#111111"
-                           FontSize="90"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"/>
-
-                <!-- Chỉ hiển thị đối với số ưu tiên -->
-                <TextBlock x:Name="txtDisplayMode"
-                           Text=""
-                           Foreground="#8B0000"
-                           FontSize="120"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           Margin="0,5,0,0"/>
-
-            </StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
 
-            <!-- ================================================= -->
-            <!-- KHU VỰC HIỂN THỊ SỐ -->
-            <!-- ================================================= -->
+                <!-- TIÊU ĐỀ -->
 
-            <Grid Grid.Row="1"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
+                <StackPanel Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            Margin="0,25,0,0">
 
-                <Grid.ColumnDefinitions>
+                    <TextBlock Text="XIN MỜI SỐ THỨ TỰ"
+                               Foreground="#111111"
+                               FontSize="90"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"/>
 
-                    <ColumnDefinition Width="Auto"/>
+                    <!-- Chỉ hiện khi đang gọi số ưu tiên -->
 
-                    <ColumnDefinition Width="Auto"/>
+                    <TextBlock x:Name="txtDisplayMode"
+                               Text=""
+                               Foreground="#8B0000"
+                               FontSize="120"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,0"/>
 
-                    <ColumnDefinition Width="Auto"/>
-
-                </Grid.ColumnDefinitions>
-
-
-                <!-- ============================================= -->
-                <!-- SỐ BẮT ĐẦU -->
-                <!-- ============================================= -->
-
-                <TextBlock Grid.Column="0"
-                           x:Name="txtDisplayStart"
-                           Text="001"
-                           Foreground="#000000"
-                           FontSize="400"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                </StackPanel>
 
 
-                <!-- ============================================= -->
-                <!-- DẤU NGĂN CÁCH -->
-                <!-- ============================================= -->
+                <!-- DÃY SỐ -->
 
-                <TextBlock Grid.Column="1"
-                           Text=" – "
-                           Foreground="#333333"
-                           FontSize="150"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Margin="5,0"/>
+                <Grid Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
 
-                <!-- ============================================= -->
-                <!-- SỐ KẾT THÚC -->
-                <!-- ============================================= -->
+                    <TextBlock Grid.Column="0"
+                               x:Name="txtDisplayStart"
+                               Text="001"
+                               Foreground="#000000"
+                               FontSize="400"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Column="2"
-                           x:Name="txtDisplayEnd"
-                           Text="010"
-                           Foreground="#000000"
-                           FontSize="400"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1"
+                               Text=" – "
+                               Foreground="#333333"
+                               FontSize="150"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="5,0"/>
+
+
+                    <TextBlock Grid.Column="2"
+                               x:Name="txtDisplayEnd"
+                               Text="010"
+                               Foreground="#000000"
+                               FontSize="400"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+
+                </Grid>
 
             </Grid>
+
+
+            <!-- ================================================= -->
+            <!-- KHU VỰC THÔNG BÁO ƯU TIÊN -->
+            <!-- ================================================= -->
+
+            <Border Grid.Row="1"
+                    Background="#FFF1F1"
+                    BorderBrush="#8B0000"
+                    BorderThickness="0,4,0,0">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock Grid.Row="0"
+                               x:Name="txtPriorityNoticeTitle"
+                               Text="ĐỐI TƯỢNG ƯU TIÊN"
+                               Foreground="#8B0000"
+                               FontSize="60"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,22,0,0"/>
+
+
+                    <TextBlock Grid.Row="1"
+                               x:Name="txtPriorityNotice"
+                               Text="MỜI ĐẾN QUẦY TIẾP NHẬN"
+                               Foreground="#111111"
+                               FontSize="70"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,5,0,0"/>
+
+
+                    <TextBlock Grid.Row="2"
+                               Text="KHÔNG CẦN CHỜ GỌI SỐ"
+                               Foreground="#333333"
+                               FontSize="42"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               Margin="0,8,0,0"/>
+
+                </Grid>
+
+            </Border>
 
         </Grid>
 

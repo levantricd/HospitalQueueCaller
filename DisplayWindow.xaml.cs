@@ -11,6 +11,10 @@ namespace HospitalQueueCaller
         }
 
 
+        // =====================================================
+        // HIỂN THỊ DÃY SỐ ĐANG GỌI
+        // =====================================================
+
         public void ShowRange(
             int start,
             int end,
@@ -23,9 +27,9 @@ namespace HospitalQueueCaller
                 end.ToString("D3");
 
 
-            // =====================================================
+            // =================================================
             // SỐ ƯU TIÊN
-            // =====================================================
+            // =================================================
 
             if (mode == "SỐ ƯU TIÊN")
             {
@@ -38,19 +42,44 @@ namespace HospitalQueueCaller
             }
 
 
-            // =====================================================
+            // =================================================
             // SỐ THƯỜNG
-            // =====================================================
+            // =================================================
 
             else
             {
-                // Không hiển thị chữ "SỐ THƯỜNG"
                 txtDisplayMode.Text = "";
 
                 txtDisplayMode.Foreground =
                     new SolidColorBrush(
                         Colors.DarkBlue);
             }
+        }
+
+
+        // =====================================================
+        // HIỂN THỊ THÔNG BÁO ƯU TIÊN
+        // =====================================================
+
+        public void ShowPriorityDirectNotice()
+        {
+            txtPriorityNoticeTitle.Text =
+                "ĐỐI TƯỢNG ƯU TIÊN";
+
+            txtPriorityNotice.Text =
+                "MỜI ĐẾN QUẦY TIẾP NHẬN";
+        }
+
+
+        // =====================================================
+        // TẮT THÔNG BÁO ƯU TIÊN
+        // =====================================================
+
+        public void HidePriorityDirectNotice()
+        {
+            txtPriorityNoticeTitle.Text = "";
+
+            txtPriorityNotice.Text = "";
         }
     }
 }
