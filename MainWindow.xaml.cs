@@ -4,6 +4,10 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
+using WpfApplication = System.Windows.Application;
+using WpfMessageBox = System.Windows.MessageBox;
+using WpfMessageBoxButton = System.Windows.MessageBoxButton;
+using WpfMessageBoxImage = System.Windows.MessageBoxImage;
 
 namespace HospitalQueueCaller
 {
@@ -201,7 +205,7 @@ namespace HospitalQueueCaller
 
             if (screens.Length <= 1)
             {
-                MessageBox.Show(
+                WpfMessageBox.Show(
                     "Máy hiện chỉ có một màn hình.",
                     "Màn hình",
                     MessageBoxButton.OK,
@@ -407,7 +411,7 @@ namespace HospitalQueueCaller
                 start <= 0 ||
                 step <= 0)
             {
-                MessageBox.Show(
+                WpfMessageBox.Show(
                     "Số bắt đầu và bước tăng không hợp lệ.");
 
                 return false;
@@ -431,7 +435,7 @@ namespace HospitalQueueCaller
                 start <= 0 ||
                 step <= 0)
             {
-                MessageBox.Show(
+                WpfMessageBox.Show(
                     "Số bắt đầu và bước tăng không hợp lệ.");
 
                 return false;
@@ -680,7 +684,7 @@ namespace HospitalQueueCaller
                 displayWindow.Close();
             }
 
-            Application.Current.Shutdown();
+            WpfApplication.Current.Shutdown();
         }
 
 
