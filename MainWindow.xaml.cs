@@ -246,15 +246,21 @@ namespace HospitalQueueCaller
                 ResizeMode.NoResize;
 
 
-            // Màn hình chính
-
-            // Cửa sổ quản lý luôn là cửa sổ bình thường,
-            // không che các ứng dụng khác.
+            // Cửa sổ quản lý không được che các ứng dụng khác.
             Topmost = false;
 
-            // Màn hình gọi số luôn nằm trên cùng
-            // để người bệnh luôn nhìn thấy.
+
+            // Màn hình gọi số luôn nằm trên cùng.
             displayWindow.Topmost = true;
+
+
+            // QUAN TRỌNG:
+            // phải Show trước khi lấy HWND.
+            // Nếu chưa Show thì HWND có thể bằng 0.
+            if (!displayWindow.IsVisible)
+            {
+                displayWindow.Show();
+            }
 
 
             IntPtr hwnd =
