@@ -33,6 +33,7 @@ namespace HospitalQueueCaller
 
 
         private const uint SWP_NOACTIVATE = 0x0010;
+        private const uint SWP_SHOWWINDOW = 0x0040;
 
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(
@@ -199,6 +200,41 @@ namespace HospitalQueueCaller
             Forms.Screen screen =
                 screens[currentScreenIndex];
 
+            // Nếu màn hình đích đang chứa cửa sổ quản lý,
+            // đưa cửa sổ quản lý sang màn hình khác.
+            if (screens.Length > 1)
+            {
+                IntPtr mainHwnd =
+                    new WindowInteropHelper(this).Handle;
+
+                if (mainHwnd != IntPtr.Zero)
+                {
+                    Forms.Screen managementScreen =
+                        Forms.Screen.FromHandle(mainHwnd);
+
+                    if (managementScreen.DeviceName ==
+                        screen.DeviceName)
+                    {
+                        for (int i = 0;
+                             i < screens.Length;
+                             i++)
+                        {
+                            if (screens[i].DeviceName !=
+                                screen.DeviceName)
+                            {
+                                Left =
+                                    screens[i].WorkingArea.Left + 20;
+
+                                Top =
+                                    screens[i].WorkingArea.Top + 20;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
 
             displayWindow.WindowState =
                 WindowState.Normal;
@@ -212,24 +248,13 @@ namespace HospitalQueueCaller
 
             // Màn hình chính
 
-            if (screen.Primary)
-            {
-                displayWindow.Topmost = false;
+            // Cửa sổ quản lý luôn là cửa sổ bình thường,
+            // không che các ứng dụng khác.
+            Topmost = false;
 
-                Topmost = true;
-            }
-            else
-            {
-                displayWindow.Topmost = true;
-
-                Topmost = false;
-            }
-
-
-            if (!displayWindow.IsVisible)
-            {
-                displayWindow.Show();
-            }
+            // Màn hình gọi số luôn nằm trên cùng
+            // để người bệnh luôn nhìn thấy.
+            displayWindow.Topmost = true;
 
 
             IntPtr hwnd =
@@ -252,7 +277,7 @@ namespace HospitalQueueCaller
                     screen.Bounds.Top,
                     screen.Bounds.Width,
                     screen.Bounds.Height,
-                    SWP_NOACTIVATE);
+                    SWP_NOACTIVATE | SWP_SHOWWINDOW);
             }
         }
 
